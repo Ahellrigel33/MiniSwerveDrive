@@ -4,8 +4,8 @@
 #define CTRL_CNT 3  // number of floats sent by Python over Wi-Fi
 #define GPIO_RX 13  // ESP8266 RX pin
 #define GPIO_TX 15  // ESP8266 TX pin
-String network_name = "ChenSpotNuc";  // name of the Wi-Fi network ESP8266 will connect to 
-String network_pass = "numberonevictoryroyale"; // password of the Wi-Fi network ESP8266 will connect to 
+String network_name = "NETWORK_NAME";  // name of the Wi-Fi network ESP8266 will connect to 
+String network_pass = "NETWORK_PASSWORD"; // password of the Wi-Fi network ESP8266 will connect to 
 
 SoftwareSerial espSerial(GPIO_RX, GPIO_TX); // RX, TX
 float send_data[CTRL_CNT] = {0.0};  

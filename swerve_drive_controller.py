@@ -6,12 +6,18 @@ import serial.tools.list_ports
 import http
 import time
 import urllib.request
+import pygame
 
 ports = serial.tools.list_ports.comports()
 
-url_esp8266 = "http://192.168.137.49/"  # ESP's IP, ex: http://192.168.102/ (Check serial console while uploading the ESP code, the IP will be printed)
-update_interval = .005 # (seconds) how often XBox controller data is sent over Wi-Fi to 
+url_esp8266 = "http://ESP_IP/"  # ESP's IP, ex: http://192.168.102/ (Check serial console while uploading the ESP code, the IP will be printed)
 
+# modes:
+#   "manual": manual Xbox controller input 
+#   "autonomous_tornado": automated tornado pathing
+
+global_mode = "manual"
+update_interval = .005 # (seconds) how often XBox controller data is sent over Wi-Fi to 
 
 # debugging function to list all connected comports
 def list_all_comports():
@@ -64,7 +70,10 @@ class XboxController(object):
 
 
     def read(self): # return the relevant buttons/triggers
-        return [str(self.LeftJoystickX), str(self.LeftJoystickY), str(self.RightJoystickX)]
+        return [str(self.LeftJoystickX), str(self.LeftJoystickY), str(self.RightJoystickX**3)]
+
+    def read_B(self):
+        return self.B
 
     def _monitor_controller(self):
         while True:
@@ -111,11 +120,50 @@ class XboxController(object):
                 elif event.code == 'BTN_TRIGGER_HAPPY4':
                     self.DownDPad = event.state
 
+
+discon = False
+def check_pad():
+    global discon
+    pygame.joystick.quit()
+    pygame.joystick.init()
+    joystick_count = pygame.joystick.get_count()
+    for i in range(joystick_count):
+        joystick = pygame.joystick.Joystick(i)
+        joystick.init()
+    if not joystick_count: 
+        if not discon:
+           print("reconnect you meat bag")
+           discon = True
+        pygame.clock.tick(20)
+        check_pad()
+    else:
+        discon = False
+
+
+
 # Sends XBox controller data over Wi-Fi to the specificed url
-def send_control_data(controller, url):
-    out_cmd = "_".join(controller.read())
-    transfer(out_cmd)
+def send_control_data(controller, url, mode = "manual", elapsed_time = None):
+    out_cmd = ""
+
+    if mode == "manual":
+        out_cmd = "_".join(controller.read())
+
+    if mode == "autonomous_tornado_right_to_left_arc":
+        l_joy_x = 0.2*math.sin(2*elapsed_time)
+        l_joy_y = 0.2*math.cos(2*elapsed_time)
+        r_joy_x = -0.1
+        out_cmd = "_".join([str(l_joy_x), str(l_joy_y), str(r_joy_x)])
+    
+    
+    if mode == "autonomous_tornado_straight":
+        l_joy_x = 0.3*math.sin(3*elapsed_time)
+        l_joy_y = 0.3*math.cos(3*elapsed_time)
+        r_joy_x = -0.1
+        out_cmd = "_".join([str(l_joy_x), str(l_joy_y), str(r_joy_x)])
+
+
     print(out_cmd)
+    transfer(out_cmd)
     
 # send and receive data over Wi-Fi
 def transfer(my_url):   
@@ -134,7 +182,12 @@ if __name__ == '__main__':
     
     print("Starting XBox controller data transfer over Wi-Fi to ESP8266...")
     prev_execute_time = time.time()
+    start_time = time.time()
     while True:
-        if ((time.time() - prev_execute_time) > update_interval):
-            send_control_data(controller, url_esp8266)
-            prev_execute_time = time.time()
+        check_pad()
+        if controller.read_B():
+            break
+        curr_time = time.time()
+        if ((curr_time - prev_execute_time) > update_interval):
+            send_control_data(controller, url_esp8266, mode = global_mode, elapsed_time = start_time - curr_time)
+            prev_execute_time = curr_time
