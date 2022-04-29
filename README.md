@@ -3,6 +3,9 @@ Project by Andrew Hellrigel and Ryan Chen
 
 A swerve drive is a 4 wheeled robot where each wheel can be independently driven and steered. This allows the robot to be able to translate in any direction while also being able to rotate at the same time. We built a simple swerve drive robot using stepper motors as the steering motors and 550 DC motors as the drive motors for each module. Via wifi with an ESP8266, it connects to a computer that is running a python script to read an XBOX controller input and then send the commands.
 
+TODO: Add link to video on swerve from YouTube
+[View a video of the swerve drive]()
+
 ###### Swerve Drive Assembly
 TODO: Take picture of swerve drive to add here
 
@@ -68,12 +71,18 @@ The electrical design works with an MBED LPC1768 microcontroller as the main con
 #### Schematic
 Below is a wiring diagram of how to make all of the connections needed for this project to work.
 
-TODO: Add picture of schematic
+###### Wiring Diagram
+![Swerve Wiring Diagram drawio](https://user-images.githubusercontent.com/31022165/165910399-0550e362-3d2a-4f34-8dc4-c8ed60317354.png)
 
 ## Software Design
 The software to control the swerve drive robot is made up of two parts. First, there is a python script that takes controller inputs from the XBOX controller and converts the data to be sent over Wi-Fi to the ESP8266 connected to the MBED. Secondly, the MBED reads the incoming data over a serial port and does the math to convert joystick inputs into wheel positions and speeds. The inverse kinematics math that needs to be performed can be found from [this whitepaper](https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383). Once the appropriate wheel positions and speeds are calculated, those commands can be sent out to the appropriate motor drivers and stepper motor drivers. Custom libraries for these motor drivers were designed to be able to accept these specific inputs.
 
+###### High Level Software Flow
 ![high_level_software_overview](https://user-images.githubusercontent.com/57779689/165907811-20b8924f-50be-4dae-a48a-8eff7c0bc9cd.png)
+
+###### Swerve Drive Inverse Kinematics
+![SwerveInverseKinematics](https://user-images.githubusercontent.com/31022165/165910603-000973e4-2409-4e3d-ab2b-fc209b10513f.png)
+
 
 
 #### ESP8266 Software
