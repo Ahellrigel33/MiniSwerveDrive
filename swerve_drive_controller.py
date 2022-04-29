@@ -1,31 +1,34 @@
-from black import out
 from inputs import get_gamepad
 import math
 import threading
 import serial
 import serial.tools.list_ports
-import struct
+import http
 import time
+import urllib.request
+
 ports = serial.tools.list_ports.comports()
 
-hid_bluetooth = "002106BE9A97"
-# hid_mbed
+url_esp8266 = "http://192.168.137.49/"  # ESP's IP, ex: http://192.168.102/ (Check serial console while uploading the ESP code, the IP will be printed)
+update_interval = .005 # (seconds) how often XBox controller data is sent over Wi-Fi to 
 
+
+# debugging function to list all connected comports
 def list_all_comports():
     for port in list(ports):
         print("--------------------------")
         print(str(port) + ':')
         print("hid: " + port.hwid)
-        print(port.name)
+        print("name: " + port.name)
         print("device: " + port.device)
         print("desc: " + port.description)
-        print(port.vid)
-        print(port.pid)
-        print(port.serial_number)
-        print(port.location)
-        print(port.interface)
-        print(port.product)
-        print(port.manufacturer)
+        print("vid: " + port.vid)
+        print("pid: " + port.pid)
+        print("serial number: " + port.serial_number)
+        print("location: " + port.location)
+        print("interface: " + port.interface)
+        print("product: " + port.product)
+        print("manufacturer: " + port.manufacturer)
         print("--------------------------")
 
 class XboxController(object):
@@ -60,36 +63,8 @@ class XboxController(object):
         self._monitor_thread.start()
 
 
-    def read(self): # return the buttons/triggers that you care about in this methode
-        # x = self.LeftJoystickX
-        # y = self.LeftJoystickY
-        # a = self.A
-        # b = self.X # b=1, x=2
-        # rb = self.RightBumper
-        # return [x, y, a, b, rb]
-        return [self.LeftJoystickX, self.LeftJoystickY, self.RightJoystickX]
-        print(
-        self.LeftJoystickY,
-        self.LeftJoystickX,
-        self.RightJoystickY,
-        self.RightJoystickX,
-        self.LeftTrigger,
-        self.RightTrigger,
-        self.LeftBumper,
-        self.RightBumper,
-        self.A,
-        self.X,
-        self.Y,
-        self.B,
-        self.LeftThumb,
-        self.RightThumb,
-        self.Back,
-        self.Start,
-        self.LeftDPad,
-        self.RightDPad,
-        self.UpDPad,
-        self.DownDPad)
-
+    def read(self): # return the relevant buttons/triggers
+        return [str(self.LeftJoystickX), str(self.LeftJoystickY), str(self.RightJoystickX)]
 
     def _monitor_controller(self):
         while True:
@@ -136,47 +111,30 @@ class XboxController(object):
                 elif event.code == 'BTN_TRIGGER_HAPPY4':
                     self.DownDPad = event.state
 
-def find_bluetooth_comport(hid = None, desc = None):
-    for port in list(ports):
-        if hid:
-            if hid in port.hwid:
-                # print("Desired bluetooth device found")
-                print(str(port) + ':')
-                # print(port.hwid)
-                # print(port.device)
-                return port.device
-        if desc:
-            if desc in port.description:
-                # print("Desired bluetooth device found")
-                print(str(port) + ':')
-                # print(port.hwid)
-                # print(port.device)
-                return port.device
-    print("Connection not found")
+# Sends XBox controller data over Wi-Fi to the specificed url
+def send_control_data(controller, url):
+    out_cmd = "_".join(controller.read())
+    transfer(out_cmd)
+    print(out_cmd)
+    
+# send and receive data over Wi-Fi
+def transfer(my_url):   
+    try:
+        n = urllib.request.urlopen(url_esp8266 + my_url).read()
+        n = n.decode("utf-8")
+        return n
+    except http.client.HTTPException as e:
+        # print("HTTP Exception")
+        return e
 
-def send_control_data(controller, serial_device):
-    
-    l_joy_x, l_joy_y, r_joy_x = controller.read()
-    out_cmd = struct.pack('fff', l_joy_x, l_joy_y, r_joy_x)
-    serial_device.write(b'a')
-    num_bytes = serial_device.write(out_cmd)
-    # print("{} bytes: {}".format(num_bytes, out_cmd))
-    # print("{} bytes: {}".format(num_bytes, struct.unpack('fff',out_cmd)))
-    
-    
-update_interval = .1 # seconds
 
 if __name__ == '__main__':
-    list_all_comports()
-    read_str = ""
     controller = XboxController()
-    mbed = serial.Serial(find_bluetooth_comport(desc = 'mbed'), 9600, timeout = 1, write_timeout = 1)  # open serial port
-    # bt = serial.Serial(find_bluetooth_comport(hid = hid_bluetooth), 9600)  # open serial port
+    # mbed = serial.Serial(find_bluetooth_comport(desc = 'mbed'), 9600, timeout = 1, write_timeout = 1)  # open serial port for mbed
     
-
-    print("Starting...")
+    print("Starting XBox controller data transfer over Wi-Fi to ESP8266...")
     prev_execute_time = time.time()
     while True:
         if ((time.time() - prev_execute_time) > update_interval):
-            a = send_control_data(controller, mbed)
+            send_control_data(controller, url_esp8266)
             prev_execute_time = time.time()
