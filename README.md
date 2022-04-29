@@ -3,8 +3,7 @@ Project by Andrew Hellrigel and Ryan Chen
 
 A swerve drive is a 4 wheeled robot where each wheel can be independently driven and steered. This allows the robot to be able to translate in any direction while also being able to rotate at the same time. We built a simple swerve drive robot using stepper motors as the steering motors and 550 DC motors as the drive motors for each module. Via wifi with an ESP8266, it connects to a computer that is running a python script to read an XBOX controller input and then send the commands.
 
-TODO: Add link to video on swerve from YouTube
-[View a video of the swerve drive]()
+[View a video of the swerve drive](https://youtu.be/719igPGglS0)
 
 ###### Swerve Drive Assembly
 ![mini_swerve_drive_pic](https://user-images.githubusercontent.com/57779689/165911164-4edecc34-d9fc-45f4-bdc5-43dedc971e39.jpg)
