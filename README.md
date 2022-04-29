@@ -73,6 +73,9 @@ TODO: Add picture of schematic
 ## Software Design
 The software to control the swerve drive robot is made up of two parts. First, there is a python script that takes controller inputs from the XBOX controller and converts the data to be sent over Wi-Fi to the ESP8266 connected to the MBED. Secondly, the MBED reads the incoming data over a serial port and does the math to convert joystick inputs into wheel positions and speeds. The inverse kinematics math that needs to be performed can be found from [this whitepaper](https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383). Once the appropriate wheel positions and speeds are calculated, those commands can be sent out to the appropriate motor drivers and stepper motor drivers. Custom libraries for these motor drivers were designed to be able to accept these specific inputs.
 
+![high_level_software_overview](https://user-images.githubusercontent.com/57779689/165907811-20b8924f-50be-4dae-a48a-8eff7c0bc9cd.png)
+
+
 #### ESP8266 Software
 All of the ESP8266 software used for this project can be found at the link below.
 - https://github.com/Ahellrigel33/MiniSwerveDrive/tree/master/esp8266_setup
