@@ -1,7 +1,7 @@
 # Mini Swerve Drive
 Project by Andrew Hellrigel and Ryan Chen
 
-A swerve drive is a 4 wheeled robot where each wheel can be independently driven and steered. This allows the robot to be able to translate in any direction while also being able to rotate at the same time. We built a simple swerve drive robot using stepper motors as the steering motors and 550 DC motors as the drive motors for each module. It connects to a computer via bluetooth that is running a python script to read an XBOX controller input and then send the commands.
+A swerve drive is a 4 wheeled robot where each wheel can be independently driven and steered. This allows the robot to be able to translate in any direction while also being able to rotate at the same time. We built a simple swerve drive robot using stepper motors as the steering motors and 550 DC motors as the drive motors for each module. Via wifi with an ESP8266, it connects to a computer that is running a python script to read an XBOX controller input and then send the commands.
 
 ###### Swerve Drive Assembly
 TODO: Take picture of swerve drive to add here
@@ -49,9 +49,9 @@ The electrical design works with an MBED LPC1768 microcontroller as the main con
 
 ![drv8825](https://user-images.githubusercontent.com/31022165/165830381-615bfc99-a2fc-477a-99de-273e445aa8bf.png)
 
-- [HC-05 Bluetooth Module](https://www.amazon.com/dp/B071YJG8DR/ref=sspa_mw_detail_1?psc=1&pd_rd_i=B071YJG8DR&pd_rd_w=jsG3i&pf_rd_p=81b2ae4c-6be1-45bd-942c-abb69c9d8ea5&pd_rd_wg=I4cYZ&pf_rd_r=SBQXBP31SVGXRKH9J5GV&pd_rd_r=46493b66-78ed-4cc4-94d5-095042b973c4&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFBSjdNUTVDNDlJSUUmZW5jcnlwdGVkSWQ9QTA0MDMzNDYyU05RMDlFREtMSDZMJmVuY3J5cHRlZEFkSWQ9QTA2ODEwNTEyOVdNT0gwQllPMzJTJndpZGdldE5hbWU9c3BfcGhvbmVfZGV0YWlsX3RoZW1hdGljJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==)
+- [ESP8266](https://www.amazon.com/HiLetgo-Internet-Development-Wireless-Micropython/dp/B010O1G1ES/ref=sr_1_7_sspa?crid=27QFED0Q4LHKZ&keywords=esp8266&qid=1651219749&sprefix=esp8266%2Caps%2C168&sr=8-7-spons&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFJTlM5UDZTMk5aMkkmZW5jcnlwdGVkSWQ9QTAzMTU1OTIyMEwxRjBHQ0xTVVY4JmVuY3J5cHRlZEFkSWQ9QTA3OTI1ODIzN0wwRlA3RjZaME9IJndpZGdldE5hbWU9c3BfbXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ&th=1)
 
-![HC-05](https://user-images.githubusercontent.com/31022165/165830474-aa4fa554-84fa-47d9-8997-b28fa73b4ab5.png)
+![ESP8266](https://user-images.githubusercontent.com/31022165/165908168-c8596b81-0cf3-40c4-af76-25cf2ee4cc86.png)
 - [SN74HCT04 Hex Inverter](https://www.amazon.com/Instruments-SN74HC04N-CD74HC04-74HC04-Inverters/dp/B00BZQ60HU)
 
 ![HexInverter](https://user-images.githubusercontent.com/31022165/165831218-43386bf9-26d8-492d-a8cc-62805fd2dce7.png)
