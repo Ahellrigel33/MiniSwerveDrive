@@ -71,14 +71,24 @@ Below is a wiring diagram of how to make all of the connections needed for this 
 TODO: Add picture of schematic
 
 ## Software Design
-The software to control the swerve drive robot is made up of two parts. First, there is a python script that takes controller inputs from the XBOX controller and converts the data to be sent over bluetooth to the connected bluetooth mmodule. Secondly, the MBED reads the bluetooth module's incoming data over a serial port and does the math to convert joystick inputs into wheel positions and speeds. The inverse kinematics math that needs to be performed can be found from [this whitepaper](https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383). Once the appropriate wheel positions and speeds are calculated, those commands can be sent out to the appropriate motor drivers and stepper motor drivers. Custom libraries for these motor drivers were designed to be able to accept these specific inputs.
+The software to control the swerve drive robot is made up of two parts. First, there is a python script that takes controller inputs from the XBOX controller and converts the data to be sent over Wi-Fi to the ESP8266 connected to the MBED. Secondly, the MBED reads the incoming data over a serial port and does the math to convert joystick inputs into wheel positions and speeds. The inverse kinematics math that needs to be performed can be found from [this whitepaper](https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383). Once the appropriate wheel positions and speeds are calculated, those commands can be sent out to the appropriate motor drivers and stepper motor drivers. Custom libraries for these motor drivers were designed to be able to accept these specific inputs.
 
-#### Python Software
-All of the python software used for this project can be found at the link below.
+#### ESP8266 Software
+All of the ESP8266 software used for this project can be found at the link below.
+- https://github.com/Ahellrigel33/MiniSwerveDrive/tree/master/esp8266_setup
 
-TODO: link to python software
+The ESP8266 should be flashed using Arduino IDE. Follow [these instructions](http://arduino.esp8266.com/Arduino/versions/2.0.0/doc/installing.html) to download the library to use ESP8266 through the Arduino IDE. 
+
+In the esp8266_setup.ino file, replace the network name/password strings with the network that your computer will be connected to.
 
 #### MBed Software
 All of the mbed software used for this project can be found at the link below.
+- https://os.mbed.com/users/andrewh33/code/SwerveDriveRobot/
 
-TODO: link to mbed repository
+
+#### Python Software
+All of the python software used for this project can be found at the link below.
+- https://github.com/Ahellrigel33/MiniSwerveDrive/blob/master/swerve_drive_controller.py
+
+In the python code, replace the existing IP address for ESP8266 with the IP address outputted by the ESP8266 on the Arduino Serial Monitor.
+
