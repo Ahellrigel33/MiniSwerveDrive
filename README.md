@@ -7,7 +7,7 @@ TODO: Add link to video on swerve from YouTube
 [View a video of the swerve drive]()
 
 ###### Swerve Drive Assembly
-TODO: Take picture of swerve drive to add here
+![mini_swerve_drive_pic](https://user-images.githubusercontent.com/57779689/165911164-4edecc34-d9fc-45f4-bdc5-43dedc971e39.jpg)
 
 ## Mechanical Design
 
