@@ -1,3 +1,4 @@
+from re import S
 from inputs import get_gamepad
 import math
 import threading
@@ -10,7 +11,7 @@ import pygame
 
 ports = serial.tools.list_ports.comports()
 
-url_esp8266 = "http://ESP_IP/"  # ESP's IP, ex: http://192.168.102/ (Check serial console while uploading the ESP code, the IP will be printed)
+url_esp8266 = "http://192.168.137.242/"  # ESP's IP, ex: http://192.168.102/ (Check serial console while uploading the ESP code, the IP will be printed)
 
 # modes:
 #   "manual": manual Xbox controller input 
@@ -70,10 +71,16 @@ class XboxController(object):
 
 
     def read(self): # return the relevant buttons/triggers
-        return [str(self.LeftJoystickX), str(self.LeftJoystickY), str(self.RightJoystickX**3)]
+        return [str(self.LeftJoystickX), str(self.LeftJoystickY), str(self.RightJoystickX**2)]
 
     def read_B(self):
         return self.B
+
+    def read_A(self):
+        return self.A
+
+    def read_Start(self):
+        return self.Start
 
     def _monitor_controller(self):
         while True:
@@ -164,6 +171,17 @@ def send_control_data(controller, url, mode = "manual", elapsed_time = None):
 
     print(out_cmd)
     transfer(out_cmd)
+
+
+# unimplemented
+def send_rezero():
+    print("rezero")
+    transfer("rezero")
+
+# unimplemented
+def send_servo_toggle():
+    print("servo_toggle")
+    transfer("servo_toggle")
     
 # send and receive data over Wi-Fi
 def transfer(my_url):   

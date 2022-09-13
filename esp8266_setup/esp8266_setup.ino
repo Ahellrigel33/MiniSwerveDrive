@@ -4,8 +4,8 @@
 #define CTRL_CNT 3  // number of floats sent by Python over Wi-Fi
 #define GPIO_RX 13  // ESP8266 RX pin
 #define GPIO_TX 15  // ESP8266 TX pin
-String network_name = "NETWORK_NAME";  // name of the Wi-Fi network ESP8266 will connect to 
-String network_pass = "NETWORK_PASSWORD"; // password of the Wi-Fi network ESP8266 will connect to 
+String network_name = "ChenSpotNuc";  // name of the Wi-Fi network ESP8266 will connect to 
+String network_pass = "numberonevictoryroyale"; // password of the Wi-Fi network ESP8266 will connect to 
 
 SoftwareSerial espSerial(GPIO_RX, GPIO_TX); // RX, TX
 float send_data[CTRL_CNT] = {0.0};  
@@ -26,26 +26,35 @@ void loop(){
     recv_data.remove(0,1);    // removes the '/' character 
     Serial.println(recv_data);  // prints data sent by Python for debugging
 
-    /* 
-     *  parses string data sent by python into floats
-    */
-    int curr_ind = 0;
-    int sep_ind = 0;
-    for (int ctrl_ind = 0; ctrl_ind < CTRL_CNT; ctrl_ind++) {     
-      String string_val = "";
-      sep_ind = recv_data.indexOf(separator,curr_ind);
-      string_val = recv_data.substring(curr_ind,sep_ind);
-      send_data[ctrl_ind] = string_val.toFloat();
-      curr_ind = sep_ind+1;
+    if (recv_data == "rezero") {
+      espSerial.write('a');
     }
-
-    /* 
-     *  sends byte array to MBED over serial
-    */
-    byte *p = (byte*)send_data;
-    for(byte i = 0; i < sizeof(send_data); i++){
-      espSerial.write(p[i]);    // write each byte of the control data to the mbed 
+    else if (recv_data == "servo_toggle") {
+      espSerial.write('t');      
     }
-    espSerial.write('a');   // send a character to indicate start of command message
+    else {
+  
+      /* 
+       *  parses string data sent by python into floats
+      */
+      int curr_ind = 0;
+      int sep_ind = 0;
+      for (int ctrl_ind = 0; ctrl_ind < CTRL_CNT; ctrl_ind++) {     
+        String string_val = "";
+        sep_ind = recv_data.indexOf(separator,curr_ind);
+        string_val = recv_data.substring(curr_ind,sep_ind);
+        send_data[ctrl_ind] = string_val.toFloat();
+        curr_ind = sep_ind+1;
+      }
+  
+      /* 
+       *  sends byte array to MBED over serial
+      */
+      byte *p = (byte*)send_data;
+      for(byte i = 0; i < sizeof(send_data); i++){
+        espSerial.write(p[i]);    // write each byte of the control data to the mbed 
+      }
+      espSerial.write('q');   // send a character to indicate start of command message
+    }
   }
 }
